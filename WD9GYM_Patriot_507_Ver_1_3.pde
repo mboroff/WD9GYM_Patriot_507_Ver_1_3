@@ -359,6 +359,7 @@ byte OE_capital[8] = {B00001,B01110,B10011,B10101,B11001,B01110,B10000,B00000}; 
 byte fullblock[8] =  {B11111,B11111,B11111,B11111,B11111,B11111,B11111,B11111};  
 byte AA_capital[8] = {B00100,B00000,B01110,B10001,B11111,B10001,B10001,B00000}; // 'Å'   
 byte emtyblock[8] =  {B00000,B00000,B00000,B00000,B00000,B00000,B00000,B00000};  
+byte       dot[8] =  {B00000,B00000,B01110,B01110,B01110,B01110,B00000,B00000};  
 
 int audioInPin = A6;
 //int audioOutPin = 10;
@@ -547,7 +548,7 @@ void setup()
     lcd.clear();                              // WD9GYM modification adjusted by W8CQD    
      lcd.print("WD9GYM");
     lcd.setCursor(0, 1);
-    lcd.print("Ver_1_3 4/22/2015");
+    lcd.print("Ver_1_3_1 4/22/2015");
     delay(3000);
     lcd.clear();
     
@@ -816,10 +817,15 @@ void loop()
  /////////////////////////////////////
  
    if(filteredstate == HIGH){ 
+      lcd.createChar(1, dot);     // Flash for tuning decoder
+      lcd.setCursor(14, 2); 
+      lcd.write( 1 );
 //     digitalWrite(ledPin, HIGH);
 //	 tone(audioOutPin,target_freq);
    }
    else{
+      lcd.setCursor(14, 2); 
+      lcd.print("  ");
 //     digitalWrite(ledPin, LOW);
 //	 noTone(audioOutPin);
    }
@@ -1235,6 +1241,9 @@ void  Selection()
                  }
              } else {
                  enableDecoder = true;
+                 lcd.setCursor(11, 2);          // print the decode flash on line 3
+                 lcd.print("MC     ");         // blank out bars
+                 
              }
            // wait for button release
            while( digitalRead(Select_Button) == HIGH ){ 
@@ -1738,7 +1747,7 @@ void writeSmeter()                 // WD9GYM modification - adjusted by W8CQD
     SmeterReadValue = analogRead(SmeterReadPin);   // read value of signal 0 - 1023
     level = map(SmeterReadValue, 1023, 0,41,0);    // constrain the value into db 0 - 40
 
-    lcd.setCursor(11, 2);                      // print the s meter on line 4
+    lcd.setCursor(11, 2);                      // print the s meter on line 3
     lcd.print("S      ");                       // blank out bars
 
     if (level > 30) level = 40;
@@ -1933,4 +1942,5 @@ void updateinfolinelcd(){
 		lcd.print(" WPM ");
 	}
 }
+
 
